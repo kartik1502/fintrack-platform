@@ -263,6 +263,10 @@ Custom AWS endpoints should normally be set only for LocalStack.
 | `MAX_UPLOAD_FILE_SIZE` | Maximum accepted import file size |
 | `MAX_UPLOAD_REQUEST_SIZE` | Maximum multipart request size |
 | `FINTRACK_OUTBOX_RELAY_ENABLED` | Enables or disables scheduled outbox publishing |
+| `FINTRACK_OUTBOX_CLEANUP_ENABLED` | Enables or disables outbox cleanup |
+| `FINTRACK_OUTBOX_CLEANUP_RETENTION_DURATION` | Duration to keep published outbox events (default: 30d) |
+| `FINTRACK_OUTBOX_CLEANUP_BATCH_SIZE` | Maximum outbox events deleted per cleanup run (default: 1000) |
+| `FINTRACK_OUTBOX_CLEANUP_FIXED_DELAY_MS` | Delay between outbox cleanup runs (default: 3600000) |
 | `FINTRACK_HTTP_TRUST_CLOUDFRONT_VIEWER_ADDRESS` | Allows deployed rate limiting to use the viewer address supplied through CloudFront |
 
 The CloudFront viewer-address setting should not be enabled for a deployment that accepts requests from untrusted infrastructure paths.

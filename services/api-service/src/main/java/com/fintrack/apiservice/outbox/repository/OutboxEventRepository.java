@@ -39,4 +39,21 @@ public interface OutboxEventRepository extends JpaRepository<OutboxEvent, Long> 
             """, nativeQuery = true)
     List<OutboxEvent> findStaleProcessingForUpdate(@Param("staleBefore") Instant staleBefore,
                                                    @Param("batchSize") int batchSize);
+
+    @Query(value = """
+            WITH candidates AS (
+                SELECT id
+                FROM outbox_event
+                WHERE status = 'PUBLISHED'
+                  AND published_at <= :retentionCutoff
+                ORDER BY published_at ASC, id ASC
+                LIMIT :batchSize
+                FOR UPDATE SKIP LOCKED
+            )
+            DELETE FROM outbox_event
+            WHERE id IN (SELECT id FROM candidates)
+            """, nativeQuery = true)
+    @org.springframework.data.jpa.repository.Modifying
+    int deletePublishedEventsOlderThan(@Param("retentionCutoff") Instant retentionCutoff,
+                                       @Param("batchSize") int batchSize);
 }
